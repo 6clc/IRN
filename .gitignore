@@ -4,3 +4,4 @@ __pycache__
 *ckpt
 lightning_logs
 .idea
+# .ipynb_checkpoints
