@@ -1,14 +1,14 @@
 import os
-device_ids = "0"
+device_ids = "0, 1"
 n_gpus = len(device_ids.split(','))
 num_workers = 4*n_gpus
 os.environ["CUDA_VISIBLE_DEVICES"]=device_ids
 
 
-log_dir = 'D:\\workspace\\SummaryWriter'
+log_dir = '/workspace'
 checkpoint_dir = log_dir
-result_dir = 'D:\\workspace\\ScoreWriter'
-voc12_root = 'D:\\workspace\\dataset\\adas_parsing_data_0409_to0416\\voc_fmt'
+result_dir = '/workspace'
+voc12_root = '/workspace/dataset/adas_parsing_data_0409_to0416/voc_fmt'
 
 
 train_list = voc12_root + '/val.txt'
