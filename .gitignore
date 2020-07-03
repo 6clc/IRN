@@ -1,0 +1,6 @@
+results
+.vscode
+__pycache__
+*ckpt
+lightning_logs
+.idea
