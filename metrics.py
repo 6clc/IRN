@@ -1,8 +1,8 @@
-def multilabel_fbeta_batch(output, target, beta=2, thresh=0.3, sigmoid=True):
+def multilabel_fbeta_batch(output, target, beta=2, thresh=0.5, sigmoid=True, dim=1):
     pred, targ = ((output.sigmoid() if sigmoid else output) > thresh).byte(), target.byte()
     m = pred * targ
 
-    return m.sum(0).float(), pred.sum(0).float(), targ.sum(0).float()
+    return m.sum(dim=dim).float(), pred.sum(dim=dim).float(), targ.sum(dim=dim).float()
 
 
 def fbeta_score(precision, recall, beta=2, eps=1e-15):
@@ -11,5 +11,5 @@ def fbeta_score(precision, recall, beta=2, eps=1e-15):
 
 
 def multilabel_fbeta_epoch(tp, pred, targ):
-    precision, recall = tp.sum() / pred.sum(), tp.sum() / targ.sum()
+    precision, recall = tp / pred, tp / targ
     return fbeta_score(precision, recall)

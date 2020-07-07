@@ -49,7 +49,7 @@ def _work(process_id, infer_dataset):
 
 
 if __name__ == '__main__':
-    dataset = voc12.dataloader.VOC12ImageDataset(train_list, voc12_root=voc12_root, img_normal=None, to_torch=False)
+    dataset = voc12.dataloader.VOC12ImageDataset(val_list, voc12_root=voc12_root, img_normal=None, to_torch=False)
     dataset = torchutils.split_dataset(dataset, num_workers)
 
     print('[ ', end='')

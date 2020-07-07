@@ -12,6 +12,8 @@ python cam_to_seg
 
 ## step3 eval cam
 
+此步会生成cam的segment标签
+
 ```
 python cam_eval
 ```

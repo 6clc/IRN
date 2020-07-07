@@ -15,7 +15,7 @@ import os
 def _work(process_id, model, dataset):
     print('idx', process_id)
     databin = dataset[process_id]
-    data_loader = DataLoader(databin, shuffle=False, num_workers= 0 // n_gpus, pin_memory=False)
+    data_loader = DataLoader(databin, shuffle=False, num_workers= num_workers, pin_memory=False)
 
     with torch.no_grad(), cuda.device(process_id):
 
@@ -60,10 +60,8 @@ def _work(process_id, model, dataset):
 
 if __name__ == '__main__':
     model = CamNet()
-    model.load_state_dict(torch.load('epoch=1.ckpt')['state_dict'], strict=True)
-    # model.load_state_dict(torch.load(
-    #    "D:\\workspace\\dataset\\adas_parsing_data_0409_to0416\\voc_fmt\models\\best.pth")['model'])
-    # model.load(p)
+    # model.load_state_dict(torch.load(cam_ckpt)['state_dict'], strict=True)
+    model.load_state_dict(torch.load(cam_ckpt), strict=True)
 
     dataset = voc12.dataloader.VOC12ClassificationDatasetMSF(val_list,
                                                             voc12_root=voc12_root,
