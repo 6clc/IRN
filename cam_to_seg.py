@@ -60,8 +60,8 @@ def _work(process_id, model, dataset):
 
 if __name__ == '__main__':
     model = CamNet()
-    # model.load_state_dict(torch.load(cam_ckpt)['state_dict'], strict=True)
-    model.load_state_dict(torch.load(cam_ckpt), strict=True)
+    model.load_state_dict(torch.load(cam_ckpt)['state_dict'], strict=True)
+    # model.load_state_dict(torch.load(cam_ckpt), strict=True)
 
     dataset = voc12.dataloader.VOC12ClassificationDatasetMSF(val_list,
                                                             voc12_root=voc12_root,

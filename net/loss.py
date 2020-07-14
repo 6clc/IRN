@@ -51,17 +51,17 @@ class CB_loss(nn.Module):
         logits = F.sigmoid(preds)
 
         
-        effective_num = 1.0 - np.power(self.beta, self.samples_per_cls)
-        weights = (1.0 - self.beta) / np.array(effective_num)
-        weights = weights / np.sum(weights) * self.no_of_classes
-        weights = torch.tensor(weights, device=labels.device)
+        # effective_num = 1.0 - np.power(self.beta, self.samples_per_cls)
+        # weights = (1.0 - self.beta) / np.array(effective_num)
+        # weights = weights / np.sum(weights) * self.no_of_classes
+        weights = torch.tensor(self.samples_per_cls, device=labels.device)
 
-        weights = weights.unsqueeze(0)
-        # print(weights.shape, labels.shape, self.no_of_classes)
-        weights = weights.repeat(labels.shape[0],1) * labels
-        weights = weights.sum(1)
-        weights = weights.unsqueeze(1)
-        weights = weights.repeat(1,self.no_of_classes)
+        # weights = weights.unsqueeze(0)
+        # # print(weights.shape, labels.shape, self.no_of_classes)
+        # weights = weights.repeat(labels.shape[0],1) * labels
+        # weights = weights.sum(1)
+        # weights = weights.unsqueeze(1)
+        # weights = weights.repeat(1,self.no_of_classes)
 
         if self.loss_type == "focal":
             cb_loss = focal_loss(labels, logits, weights, self.gamma)

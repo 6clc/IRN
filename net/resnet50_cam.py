@@ -35,18 +35,21 @@ class CamNet(LightningModule):
         self.backbone = nn.ModuleList([self.stage1, self.stage2, self.stage3, self.stage4])
         self.newly_added = nn.ModuleList([self.classifier])
 
-        self.params = []
-        self.freeze()
+        self.init_params()
 
         # self.loss = nn.MultiLabelSoftMarginLoss(weight=torch.tensor(cam_w, dtype=torch.float32))
         self.loss = CB_loss(cam_w, n_classes, 'msl')
     
-    def freeze(self):
+    def init_params(self):
+        self.params = [[], []]
         for name, para in self.named_parameters():
-            # if 'resnet' in name and 'conv' in name: 
-            #     para.requires_grad = False
-            # else:
-            self.params.append(para)
+            if 'resnet' in name: 
+                if 'conv1' in name:
+                    para.requires_grad = False
+                else:
+                    self.params[0].append(para)
+            else:
+                self.params[1].append(para)
 
     def forward(self, x):
 
@@ -106,10 +109,13 @@ class CamNet(LightningModule):
         return {'test_loss': val_loss_mean, 'fbeta2': fbeta}
     
     def configure_optimizers(self):
-        optimer = Adam([{'params':self.params}], lr=3e-3, weight_decay=1e-4)
-        scheduler = CosineAnnealingLR(optimer, T_max=32)
+        max_step = (num_of_train // cam_bs) * cam_epoch
+        optimer = torchutils.SGDROptimizer([{'params':self.params[0], 'lr':cam_lr, 'weight_decay':cam_wd},
+                       {'params':self.params[1], 'lr':cam_lr*10, 'weight_decay':cam_wd}],
+                       lr=cam_lr,weight_decay=cam_wd, steps_per_epoch=max_step)
+        # scheduler = CosineAnnealingLR(optimer, T_max=32)
 
-        return  [optimer], [scheduler]
+        return  optimer
     
     def train_dataloader(self):
         train_dataset = VOC12ClassificationDataset(train_list, 
